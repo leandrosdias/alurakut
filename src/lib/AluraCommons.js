@@ -26,7 +26,7 @@ export function AlurakutMenu({ githubUser }) {
       <div className="container">
         <AlurakutMenu.Logo src={`${BASE_URL}/logo.svg`} />
 
-        <nav style={{ flex: 1 }}>
+        <nav style={{ flex: 1, alignItems: 'center' }}>
           {[{ name: 'Inicio', slug: '/'}, {name: 'Amigos', slug: '/amigos'}, {name: 'Comunidades', slug: '/comunidades'}].map((menuItem) => (
             <Link key={`key__${menuItem.name.toLocaleLowerCase()}`} href={`${menuItem.slug.toLocaleLowerCase()}`}>
               {menuItem.name}
@@ -34,7 +34,7 @@ export function AlurakutMenu({ githubUser }) {
           ))}
         </nav>
 
-        <nav>
+        <nav style={{ alignItems: 'center' }}>
           <a href={`/logout`}>
             Sair
           </a>
@@ -162,9 +162,9 @@ AlurakutMenu.Wrapper = styled.header`
 `;
 AlurakutMenu.Logo = styled.img`
   background-color: #ffffff;
-  padding: 9px 14px;
+  padding: 9px 19px;
   border-radius: 1000px;
-  height: 34px;
+  height: 21px;
 `;
 
 function AlurakutMenuProfileSidebar({ githubUser }) {
