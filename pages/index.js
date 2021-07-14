@@ -3,6 +3,9 @@ import MainGrid from '../src/components/MainGrid';
 import Box from '../src/components/Box';
 import { AlurakutMenu, AlurakutProfileSidebarMenuDefault, OrkutNostalgicIconSet } from '../src/lib/AluraCommons';
 import { ProfileRelationsBoxWrapper } from '../src/components/ProfileRelations';
+import utilFunctions from '../src/lib/Utils'
+import BoxItemImageList from '../src/components/BoxItemImageList'
+import SelectTimes from '../src/components/SelectTimes'
 
 function ProfileSidebar(propriedades) {
   return (
@@ -27,25 +30,14 @@ function ProfileSidebar(propriedades) {
 export default function Home() {
 
   const usuarioAleatorio = 'leandrosdias';
-  const pessoasFavoritas = [
-    'juunegreiros',
-    'omariosouto',
-    'peas',
-    'rafaballerini',
-    'marcobrunodev',
-    'felipefialho'
-  ];
-  const [comunidades, setComunidades] = React.useState([{
-    id: new Date().toISOString(),
-    title: 'Eu odeio acordar cedo',
-    image: 'https://alurakut.vercel.app/capa-comunidade-01.jpg'
-  }]);
+  const pessoasFavoritas = utilFunctions.GetFavorites();
+  const [times, setTimes] = React.useState(utilFunctions.GetTimes());
 
   return (
     <>
       <AlurakutMenu githubUser={usuarioAleatorio} />
       <MainGrid>
-        {/* <Box style="grid-area: profileArea;"> */}
+
         <div className="profileArea" style={{ gridArea: 'profileArea' }}>
           <ProfileSidebar githubUser={usuarioAleatorio} />
         </div>
@@ -66,32 +58,28 @@ export default function Home() {
               e.preventDefault();
 
               const dadosDoForm = new FormData(e.target);
-              const comunidade = {
-                id: new Date().toISOString(),
-                title: dadosDoForm.get('title'),
-                image: dadosDoForm.get('image')
-              }
+              const timeName = dadosDoForm.get('time');
 
-              setComunidades([...comunidades, comunidade]);
+              const time = utilFunctions.GetTime(timeName)
+
+              setTimes([...times, time]);
             }}>
 
               <div>
-                <input
-                  placeholder="Qual vai ser o nome da comunidade?"
-                  name="title"
-                  aria-label="Qual vai ser o nome da comunidade?"
-                  type="text" />
+                <label>
+                  Gostaria de entrar na comunidade de qual time?
+                </label>
               </div>
+              <br />
 
               <div>
-                <input
-                  placeholder="Coloque uma URL para usarmos de capa"
-                  name="image"
-                  aria-label="Coloque uma URL para usarmos de capa"
-                />
+                <SelectTimes name='time'>
+
+                </SelectTimes>
               </div>
 
-              <button>Criar comunidade</button>
+              <hr />
+              <button>Entrar na comunidade</button>
 
             </form>
           </Box>
@@ -100,42 +88,13 @@ export default function Home() {
         <div className="profileRelationsArea" style={{ gridArea: 'profileRelationsArea' }}>
 
           <ProfileRelationsBoxWrapper>
-            <h2 className="smallTitle">
-              Comunidades ({comunidades.length})
-            </h2>
-
-            <ul>
-              {comunidades.map((itemAtual) => {
-                return (
-                  <li key={itemAtual.id}>
-                    <a href={`/users/${itemAtual.title}`} key={itemAtual.id}>
-                      <img src={itemAtual.image} />
-                      <span>{itemAtual.title}</span>
-                    </a>
-                  </li>
-                )
-              })}
-            </ul>
+            <BoxItemImageList title="Comunidades" lista={times} />
           </ProfileRelationsBoxWrapper>
 
           <ProfileRelationsBoxWrapper>
-            <h2 className="smallTitle">
-              Pessoas da comunidade ({pessoasFavoritas.length})
-            </h2>
-
-            <ul>
-              {pessoasFavoritas.map((itemAtual) => {
-                return (
-                  <li key={itemAtual}>
-                    <a href={`/users/${itemAtual}`} key={itemAtual}>
-                      <img src={`https://github.com/${itemAtual}.png`} />
-                      <span>{itemAtual}</span>
-                    </a>
-                  </li>
-                )
-              })}
-            </ul>
+            <BoxItemImageList title="Pessoas da comunidade" lista={pessoasFavoritas} />
           </ProfileRelationsBoxWrapper>
+
         </div>
       </MainGrid>
     </>

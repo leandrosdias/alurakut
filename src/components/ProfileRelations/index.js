@@ -37,6 +37,7 @@ export const ProfileRelationsBoxWrapper = styled(Box)`
       display: -webkit-box;
       -webkit-line-clamp: 3;
       -webkit-box-orient: vertical;
+      text-align: center;
     }
     &:after {
       content: "";
