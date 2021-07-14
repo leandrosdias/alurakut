@@ -4,7 +4,7 @@ import { AlurakutStyles } from '../src/lib/AluraCommons';
 const GlobalStyle = createGlobalStyle`
   // Reset CSS
 
-  . {
+  * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
