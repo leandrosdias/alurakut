@@ -33,6 +33,24 @@ export default function Home() {
   const pessoasFavoritas = utilFunctions.GetFavorites();
   const [times, setTimes] = React.useState(utilFunctions.GetTimes());
 
+  const [seguidores, setSeguidores]  = React.useState([]);
+  React.useEffect(function () {
+    fetch(`https://api.github.com/users/${usuarioAleatorio}/followers`).
+      then(function (respostaServidor) {
+        return respostaServidor.json();
+      }).
+      then(function (respostaCompleta) {
+        setSeguidores(respostaCompleta.map((item)=>{
+          return {
+            id: item.id,
+            title: item.login,
+            image: item.avatar_url,
+            url: item.html_url
+        }
+        }));
+      }, [])
+  })
+
   return (
     <>
       <AlurakutMenu githubUser={usuarioAleatorio} />
@@ -86,6 +104,10 @@ export default function Home() {
         </div>
 
         <div className="profileRelationsArea" style={{ gridArea: 'profileRelationsArea' }}>
+
+          <ProfileRelationsBoxWrapper>
+            <BoxItemImageList title="Seguidores" lista={seguidores} />
+          </ProfileRelationsBoxWrapper>
 
           <ProfileRelationsBoxWrapper>
             <BoxItemImageList title="Comunidades" lista={times} />

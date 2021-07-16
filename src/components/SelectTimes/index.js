@@ -26,7 +26,9 @@ class App extends React.Component {
                 onChange={this.handleChange}
                 options={options}
                 name = {this.props.name}
-            />
+                id = {this.props.name}
+                instanceId = {this.props.name}
+                />
         );
     }
 }
