@@ -31,25 +31,38 @@ export default function Home() {
 
   const usuarioAleatorio = 'leandrosdias';
   const pessoasFavoritas = utilFunctions.GetFavorites();
-  const [times, setTimes] = React.useState(utilFunctions.GetTimes());
+  const [times, setTimes] = React.useState([]);
 
-  const [seguidores, setSeguidores]  = React.useState([]);
+  const [seguidores, setSeguidores] = React.useState([]);
   React.useEffect(function () {
+    //GET
     fetch(`https://api.github.com/users/${usuarioAleatorio}/followers`).
       then(function (respostaServidor) {
         return respostaServidor.json();
       }).
       then(function (respostaCompleta) {
-        setSeguidores(respostaCompleta.map((item)=>{
+        setSeguidores(respostaCompleta.map((item) => {
           return {
             id: item.id,
             title: item.login,
             image: item.avatar_url,
             url: item.html_url
-        }
+          }
         }));
-      }, [])
-  })
+      })
+
+    fetch('/api/times', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Action': 'Get'
+      },
+    }).then(async (response) => {
+      const responseObj = await response.json();
+      setTimes(responseObj.registroCriado);
+    })
+
+  }, [])
 
   return (
     <>
@@ -80,7 +93,20 @@ export default function Home() {
 
               const time = utilFunctions.GetTime(timeName)
 
-              setTimes([...times, time]);
+              fetch('/api/times', {
+                method: 'POST',
+                body: JSON.stringify(time),
+                headers: {
+                  'Content-Type': 'application/json',
+                  'Action': 'Create'
+                },
+              }).then(async (response) => {
+                const dados = await response.json();
+
+                time.id = dados.registroCriado.id;
+                setTimes([...times, time]);
+              })
+
             }}>
 
               <div>

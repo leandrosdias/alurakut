@@ -11,7 +11,7 @@ export function BoxItemImageList(props) {
                         <li key={itemAtual.id}>
                             <a href={itemAtual.url} key={itemAtual.id} target="_blank">
                                 <img src={itemAtual.image} />
-                                <span>{itemAtual.title}</span>
+                                <span>{itemAtual.nome}</span>
                             </a>
                         </li>
                     )
