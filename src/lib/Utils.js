@@ -34,8 +34,7 @@ const Utils = {
 
     GetTime: function (time) {
         return {
-            id: time,
-            title: time,
+            nome: time,
             image: this.GetTimeUrlLogo(time),
             url: this.GetTimeWebSite(time)
         }
@@ -47,10 +46,6 @@ const Utils = {
 
     GetTimeWebSite: function (time) {
         return dicTimes[time][1];
-    },
-
-    GetTimes: function () {
-        return [this.GetTime('Chicago Bears')];
     },
 
     GetFavorites: function () {
@@ -66,7 +61,7 @@ const Utils = {
         return pessoasFavoritas.map((item) => {
             return {
                 id: item,
-                title: item,
+                nome: item,
                 image: `https://github.com/${item}.png`,
                 url: `https://github.com/${item}`
             }
