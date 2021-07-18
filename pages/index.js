@@ -6,6 +6,9 @@ import { ProfileRelationsBoxWrapper } from '../src/components/ProfileRelations';
 import utilFunctions from '../src/lib/Utils'
 import BoxItemImageList from '../src/components/BoxItemImageList'
 import SelectTimes from '../src/components/SelectTimes'
+import nookie from 'nookies'
+import jwt from 'jsonwebtoken'
+import { AluraKutFooter } from '../src/components/AluraKutFooter';
 
 function ProfileSidebar(propriedades) {
   return (
@@ -27,9 +30,9 @@ function ProfileSidebar(propriedades) {
   )
 }
 
-export default function Home() {
+export default function Home(props) {
 
-  const usuarioAleatorio = 'leandrosdias';
+  const usuarioAleatorio = props.githubUser;
   const pessoasFavoritas = utilFunctions.GetFavorites();
   const [times, setTimes] = React.useState([]);
 
@@ -145,6 +148,37 @@ export default function Home() {
 
         </div>
       </MainGrid>
+      <AluraKutFooter/>
     </>
   )
+}
+
+
+export async function getServerSideProps(context) {
+
+  const token = nookie.get(context).USER_TOKEN;
+  const urlApi = process.env.URL_API;
+  const { isAuthenticated } = await fetch(urlApi + '/api/auth', {
+    headers: {
+      Authorization: token
+    }
+  })
+    .then((resposta) => resposta.json())
+
+  if (!isAuthenticated) {
+    return {
+      redirect: {
+        destination: '/login',
+        permanent: false
+      }
+    }
+  }
+
+  const { githubUser } = jwt.decode(token);
+
+  return {
+    props: {
+      githubUser
+    }
+  }
 }
