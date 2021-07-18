@@ -1,7 +1,7 @@
 import React from 'react';
 import MainGrid from '../src/components/MainGrid';
 import Box from '../src/components/Box';
-import { AlurakutMenu, AlurakutProfileSidebarMenuDefault, OrkutNostalgicIconSet } from '../src/lib/AluraCommons';
+import { AlurakutMenu, ProfileSidebar, OrkutNostalgicIconSet } from '../src/lib/AluraCommons';
 import { ProfileRelationsBoxWrapper } from '../src/components/ProfileRelations';
 import utilFunctions from '../src/lib/Utils'
 import BoxItemImageList from '../src/components/BoxItemImageList'
@@ -10,33 +10,15 @@ import nookie from 'nookies'
 import jwt from 'jsonwebtoken'
 import { AluraKutFooter } from '../src/components/AluraKutFooter';
 
-function ProfileSidebar(propriedades) {
-  return (
-    <Box as="aside">
-      <img src={`https://github.com/${propriedades.githubUser}.png`} style={{ borderRadius: '8px' }} />
-
-      <hr />
-
-      <p>
-        <a className="boxLink" href={`https://github.com/${propriedades.githubUser}`}>
-          @{propriedades.githubUser}
-        </a>
-      </p>
-
-      <hr />
-
-      <AlurakutProfileSidebarMenuDefault />
-    </Box>
-  )
-}
-
 export default function Home(props) {
 
+  const user = props.user;
   const usuarioAleatorio = props.githubUser;
   const pessoasFavoritas = utilFunctions.GetFavorites();
+ 
   const [times, setTimes] = React.useState([]);
-
   const [seguidores, setSeguidores] = React.useState([]);
+ 
   React.useEffect(function () {
     //GET
     fetch(`https://api.github.com/users/${usuarioAleatorio}/followers`).
@@ -52,18 +34,10 @@ export default function Home(props) {
             url: item.html_url
           }
         }));
-      })
+      });
 
-    fetch('/api/times', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Action': 'Get'
-      },
-    }).then(async (response) => {
-      const responseObj = await response.json();
-      setTimes(responseObj.registroCriado);
-    })
+    utilFunctions.GetTimeByUser(user.times)
+      .then((timesResult) => { setTimes([...times, ...timesResult]); });
 
   }, [])
 
@@ -88,25 +62,26 @@ export default function Home(props) {
           <Box>
             <h2 className="subTitle">O que você deseja fazer?</h2>
 
-            <form onSubmit={function handleCriaComunidade(e) {
+            <form onSubmit={async function handleCriaComunidade(e) {
               e.preventDefault();
 
               const dadosDoForm = new FormData(e.target);
               const timeName = dadosDoForm.get('time');
 
-              const time = utilFunctions.GetTime(timeName)
+              const time = await utilFunctions.GetTime(timeName)
 
-              fetch('/api/times', {
+              const timesUser = user.times === '' ? time.nome : user.times + '|' + time.nome;
+
+              await fetch('/api/user', {
                 method: 'POST',
-                body: JSON.stringify(time),
                 headers: {
                   'Content-Type': 'application/json',
-                  'Action': 'Create'
+                  'action': 'AddTeam',
+                  'timesuser': timesUser,
+                  'userid': user.id
                 },
               }).then(async (response) => {
-                const dados = await response.json();
-
-                time.id = dados.registroCriado.id;
+                user.times = timesUser
                 setTimes([...times, time]);
               })
 
@@ -148,7 +123,7 @@ export default function Home(props) {
 
         </div>
       </MainGrid>
-      <AluraKutFooter/>
+      <AluraKutFooter />
     </>
   )
 }
@@ -166,6 +141,11 @@ export async function getServerSideProps(context) {
     .then((resposta) => resposta.json())
 
   if (!isAuthenticated) {
+    nookie.set(context, 'ERROR_LOGIN', true, {
+      path: '/',
+      maxAge: 86400 * 7
+    });
+
     return {
       redirect: {
         destination: '/login',
@@ -174,11 +154,28 @@ export async function getServerSideProps(context) {
     }
   }
 
+  nookie.set(context, 'ERROR_LOGIN', false, {
+    path: '/',
+    maxAge: 86400 * 7
+  });
+
   const { githubUser } = jwt.decode(token);
+
+  const user = await fetch(urlApi + '/api/user', {
+    method: 'POST',
+    body: JSON.stringify({ username: githubUser, nome: githubUser, times: '' }),
+    headers: {
+      'Content-Type': 'application/json',
+      'Action': 'Create',
+      'Username': githubUser
+    },
+  })
+    .then((resposta) => resposta.json())
 
   return {
     props: {
-      githubUser
+      githubUser,
+      user
     }
   }
 }
