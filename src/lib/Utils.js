@@ -23,7 +23,7 @@ const dicTimes = {
         "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSw0b96mtc6nRBK6iYIovmrLj2lv9yNQ50HNQ&usqp=CAU",
         "https://www.chicagobears.com/"
     ],
-    
+
     "Cincinnati Bengals": [
         "data:image/png;base64,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",
         "https://www.bengals.com/"
@@ -32,12 +32,69 @@ const dicTimes = {
 
 const Utils = {
 
-    GetTime: function (time) {
-        return {
-            nome: time,
-            image: this.GetTimeUrlLogo(time),
-            url: this.GetTimeWebSite(time)
+    GetTime: async function (timeName) {
+        const time = await fetch('/api/times', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'timename': timeName
+            },
+        })
+            .then((resposta) => resposta.json())
+
+        time.url = 'comentario/' + time.id
+        return time
+    },
+
+    GetTimeById: async function (urlApi, id) {
+        const time = await fetch(urlApi + '/api/times', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'id': id
+            },
+        })
+            .then((resposta) => resposta.json())
+
+        return time
+    },
+
+    GetComentarios: async function (timeId) {
+        const comentarios = await fetch('/api/comentario', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'time': timeId
+            },
+        })
+            .then((resposta) => resposta.json())
+
+        return comentarios
+    },
+
+    GetTimeByUser: async function (userTimes) {
+        const times = await Promise.all(userTimes.split('|').map(async (timeName) => {
+            const time = await this.GetTime(timeName);
+            time.url = 'comentario/' + time.id
+            return time;
         }
+        ));
+        return times;
+    },
+
+    GetTimesSelect: async function (timeId) {
+        const time = await fetch('/api/times', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Action': 'Create',
+                'timeId': timeId
+            },
+        })
+            .then((resposta) => resposta.json())
+
+        time.url = 'comentario/' + time.id
+        return time
     },
 
     GetTimeUrlLogo: function (time) {

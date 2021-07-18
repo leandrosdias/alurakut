@@ -1,11 +1,13 @@
 import React from 'react';
 import { useRouter } from 'next/router';
-import nookies from 'nookies';
+import nookies, { parseCookies } from 'nookies';
 import { AluraKutFooter } from '../src/components/AluraKutFooter';
 
 export default function LoginScreen() {
     const router = useRouter();
     const [githubUser, setGithubUser] = React.useState('');
+
+    const cookies = parseCookies()
 
     return (
         <main style={{ display: 'flex', flex: 1, alignItems: 'center', justifyContent: 'center' }}>
@@ -22,7 +24,6 @@ export default function LoginScreen() {
                     <form className="box" onSubmit={(infosDoEvento) => {
                         infosDoEvento.preventDefault();
 
-                        console.log('Usuário: ', githubUser)
                         fetch('https://alurakut.vercel.app/api/login', {
                             method: 'POST',
                             headers: {
@@ -50,9 +51,12 @@ export default function LoginScreen() {
                                 setGithubUser(evento.target.value)
                             }}
                         />
-                        {githubUser.length === 0
-                            ? 'Preencha o campo'
-                            : ''
+                        {
+                            cookies.ERROR_LOGIN !== undefined && cookies.ERROR_LOGIN === "true" ?
+                                <p className="erroMsg">Usuário não existe</p> :
+                                githubUser.length === 0
+                                    ? 'Preencha o campo'
+                                    : ''
                         }
                         <button type="submit">
                             Login

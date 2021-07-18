@@ -2,6 +2,7 @@ import React from 'react';
 import styled, { css } from 'styled-components';
 import NextLink from 'next/link';
 import { destroyCookie } from 'nookies';
+import Box from '../components/Box';
 
 const BASE_URL = 'http://alurakut.vercel.app/';
 const v = '1';
@@ -226,7 +227,6 @@ export function AlurakutProfileSidebarMenuDefault() {
         </a>
         <a href="/login" onClick={
           () => {
-            console.log('passou aqui')
             return {
               redirect: {
                 destination: '/login',
@@ -406,6 +406,10 @@ const AlurakutLoginScreen = css`
         margin-bottom: 36px;
       }
     }
+    .erroMsg{
+      color: red;
+      padding-bottom: 10px;
+    }
     .formArea {
       grid-area: formArea;
       display: flex;
@@ -523,3 +527,23 @@ export const AlurakutStyles = css`
 
   ${AlurakutLoginScreen}
 `;
+
+export function ProfileSidebar(propriedades) {
+  return (
+    <Box as="aside">
+      <img src={propriedades.isTime ? propriedades.image : `https://github.com/${propriedades.githubUser}.png`} style={{ borderRadius: '8px' }} />
+
+      <hr />
+
+      <p>
+        <a className="boxLink" href={propriedades.isTime ? propriedades.url : `https://github.com/${propriedades.githubUser}`}>
+          @{propriedades.isTime ? propriedades.time : propriedades.githubUser}
+        </a>
+      </p>
+
+      <hr />
+
+      <AlurakutProfileSidebarMenuDefault />
+    </Box>
+  )
+}

@@ -1,4 +1,7 @@
+import { useRouter } from 'next/router';
+
 export function BoxItemImageList(props) {
+    const router = useRouter();
     return (
         <>
             <h2 className="smallTitle">
@@ -9,7 +12,10 @@ export function BoxItemImageList(props) {
                 {props.lista.slice(0, 6).map((itemAtual) => {
                     return (
                         <li key={itemAtual.id}>
-                            <a href={itemAtual.url} key={itemAtual.id} target="_blank">
+                            <a href={itemAtual.url} key={itemAtual.id} onSubmit={(infosDoEvento) => {
+                                infosDoEvento.preventDefault();
+                                router.push(itemAtual.url)
+                            }}>
                                 <img src={itemAtual.image} />
                                 <span>{itemAtual.nome}</span>
                             </a>
