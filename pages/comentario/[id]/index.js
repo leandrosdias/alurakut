@@ -20,6 +20,8 @@ export default function ComentarioPage(props) {
     const [times, setTimes] = React.useState([]);
     const [seguidores, setSeguidores] = React.useState([]);
     const [comentarios, setCommentarios] = React.useState([]);
+    const [comunLoading, setcomunLoading] = React.useState(true);
+    const [comentarioLoading, setComentarioLoading] = React.useState(true);
     const time = props.time;
 
     React.useEffect(function () {
@@ -39,11 +41,11 @@ export default function ComentarioPage(props) {
                 }));
             });
 
-        utilFunctions.GetTimeByUser(user.times)
-            .then((timesResult) => { setTimes([...times, ...timesResult]); });
+        utilFunctions.GetTimeByUser(user.times, '')
+            .then((timesResult) => { setTimes([...times, ...timesResult]); setcomunLoading(false) });
 
         utilFunctions.GetComentarios(time.id)
-            .then((comentariosResult) => { setCommentarios([...comentarios, ...comentariosResult]); })
+            .then((comentariosResult) => { setCommentarios([...comentarios, ...comentariosResult]); setComentarioLoading(false); })
 
     }, [])
 
@@ -77,6 +79,7 @@ export default function ComentarioPage(props) {
                         <form style={{ padding: '10px' }} onSubmit={async function handleCriaComunidade(e) {
                             e.preventDefault();
 
+                            setComentarioLoading(true);
                             const dadosDoForm = new FormData(e.target);
                             const comment = dadosDoForm.get('comment');
 
@@ -100,6 +103,7 @@ export default function ComentarioPage(props) {
                                     setCommentarios([...comentarios, comentario]);
                                 })
 
+                            setComentarioLoading(false);
                         }}>
 
                             <textarea style={{ padding: '20px' }}
@@ -115,7 +119,7 @@ export default function ComentarioPage(props) {
                     </Box>
 
                     <Box>
-                        <BoxCommentItems title="Comentários" lista={comentarios}></BoxCommentItems>
+                        <BoxCommentItems title="Comentários" lista={comentarios} loading={comentarioLoading} ></BoxCommentItems>
                     </Box>
 
                 </div>
@@ -128,7 +132,7 @@ export default function ComentarioPage(props) {
                     </ProfileRelationsBoxWrapper>
 
                     <ProfileRelationsBoxWrapper>
-                        <BoxItemImageList title="Comunidades" lista={times} />
+                        <BoxItemImageList title="Comunidades" lista={times} loading={comunLoading} />
                     </ProfileRelationsBoxWrapper>
 
                     <ProfileRelationsBoxWrapper>

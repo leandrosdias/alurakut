@@ -32,7 +32,7 @@ const dicTimes = {
 
 const Utils = {
 
-    GetTime: async function (timeName) {
+    GetTime: async function (timeName, prefix) {
         const time = await fetch('/api/times', {
             method: 'GET',
             headers: {
@@ -42,7 +42,7 @@ const Utils = {
         })
             .then((resposta) => resposta.json())
 
-        time.url = 'comentario/' + time.id
+        time.url = prefix + time.id
         return time
     },
 
@@ -72,17 +72,17 @@ const Utils = {
         return comentarios
     },
 
-    GetTimeByUser: async function (userTimes) {
+    GetTimeByUser: async function (userTimes, prefix) {
         const times = await Promise.all(userTimes.split('|').map(async (timeName) => {
             const time = await this.GetTime(timeName);
-            time.url = 'comentario/' + time.id
+            time.url = prefix + time.id
             return time;
         }
         ));
         return times;
     },
 
-    GetTimesSelect: async function (timeId) {
+    GetTimesSelect: async function (timeId, prefix) {
         const time = await fetch('/api/times', {
             method: 'GET',
             headers: {
@@ -93,7 +93,7 @@ const Utils = {
         })
             .then((resposta) => resposta.json())
 
-        time.url = 'comentario/' + time.id
+        time.url = prefix + time.id
         return time
     },
 
