@@ -1,4 +1,19 @@
-export function BoxItemImageList(props) {
+import Loader from '../Loader';
+
+export function BoxCommentItems(props) {
+    
+    if (props.loading) {
+        return (
+            <>
+                <h2 className="smallTitle">
+                    {props.title} ({props.lista.length})
+                </h2>
+
+                <Loader />
+            </>
+        )
+    }
+
     return (
         <>
             <h2 className="smallTitle">
@@ -32,4 +47,4 @@ export function BoxItemImageList(props) {
     )
 }
 
-export default BoxItemImageList;
+export default BoxCommentItems;

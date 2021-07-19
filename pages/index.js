@@ -15,10 +15,12 @@ export default function Home(props) {
   const user = props.user;
   const usuarioAleatorio = props.githubUser;
   const pessoasFavoritas = utilFunctions.GetFavorites();
- 
+
   const [times, setTimes] = React.useState([]);
   const [seguidores, setSeguidores] = React.useState([]);
- 
+  const [comunLoading, setcomunLoading] = React.useState(true);
+
+
   React.useEffect(function () {
     //GET
     fetch(`https://api.github.com/users/${usuarioAleatorio}/followers`).
@@ -36,8 +38,9 @@ export default function Home(props) {
         }));
       });
 
-    utilFunctions.GetTimeByUser(user.times)
-      .then((timesResult) => { setTimes([...times, ...timesResult]); });
+    setcomunLoading(true);
+    utilFunctions.GetTimeByUser(user.times, 'comentario/')
+      .then((timesResult) => { setTimes([...times, ...timesResult]); setcomunLoading(false); });
 
   }, [])
 
@@ -65,10 +68,11 @@ export default function Home(props) {
             <form onSubmit={async function handleCriaComunidade(e) {
               e.preventDefault();
 
+              setcomunLoading(true);
               const dadosDoForm = new FormData(e.target);
               const timeName = dadosDoForm.get('time');
 
-              const time = await utilFunctions.GetTime(timeName)
+              const time = await utilFunctions.GetTime(timeName, 'comentario/')
 
               const timesUser = user.times === '' ? time.nome : user.times + '|' + time.nome;
 
@@ -85,6 +89,7 @@ export default function Home(props) {
                 setTimes([...times, time]);
               })
 
+              setcomunLoading(false);
             }}>
 
               <div>
@@ -114,7 +119,7 @@ export default function Home(props) {
           </ProfileRelationsBoxWrapper>
 
           <ProfileRelationsBoxWrapper>
-            <BoxItemImageList title="Comunidades" lista={times} />
+            <BoxItemImageList title="Comunidades" lista={times} loading={comunLoading} />
           </ProfileRelationsBoxWrapper>
 
           <ProfileRelationsBoxWrapper>
